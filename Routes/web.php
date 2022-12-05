@@ -11,7 +11,7 @@
 |
 */
 
-Route::prefix('')->group(function() {
+Route::prefix('')->middleware('auth')->group(function() {
     Route::resource('project', 'ProjectController');
     Route::get('project/confirm/{project}', 'ProjectController@confirm')->name('project.confirm');
     Route::get('project/photo/destroy/{photo}', 'ProjectController@photo_delete')->name('project.photo.destroy');

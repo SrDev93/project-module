@@ -21,6 +21,6 @@ composer require srdev93/project-module
 
 then run:
 ```php
-php artisan module:enable project
 php artisan module:migrate project
+php artisan module:enable project
 ```

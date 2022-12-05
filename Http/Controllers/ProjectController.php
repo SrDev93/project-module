@@ -46,13 +46,13 @@ class ProjectController extends Controller
                 'manager' => $request->manager,
                 'construct_status' => $request->construct_status,
                 'description' => $request->description,
-                'image' => (isset($request->image)?file_store($request->image, 'assets/uploads/sliders/images/','photo_'):null)
+                'image' => (isset($request->image)?file_store($request->image, 'assets/uploads/projects/images/','photo_'):null)
             ]);
 
             if (isset($request->photo)){
                 foreach ($request->photo as $key => $photo){
                     $p = new Photo();
-                    $p->path = file_store($photo, 'assets/uploads/sliders/galleries/','photo_');
+                    $p->path = file_store($photo, 'assets/uploads/projects/galleries/','photo_');
                     $p->alt = $request->alt[$key];
                     $project->photo()->save($p);
                 }
@@ -100,7 +100,7 @@ class ProjectController extends Controller
             $project->construct_status = $request->construct_status;
             $project->description = $request->description;
             if (isset($request->image)) {
-                $project->image = file_store($request->image, 'assets/uploads/sliders/images/', 'photo_');
+                $project->image = file_store($request->image, 'assets/uploads/projects/images/', 'photo_');
             }
             $project->save();
 
@@ -109,14 +109,14 @@ class ProjectController extends Controller
                     if (isset($request->photo[$key])){
                         if (isset($project->photo[$key])){
 
-                            $project->photo[$key]->path = file_store($request->photo[$key], 'assets/uploads/sliders/galleries/','photo_');
+                            $project->photo[$key]->path = file_store($request->photo[$key], 'assets/uploads/projects/galleries/','photo_');
                             $project->photo[$key]->alt = $request->alt[$key];
                             $project->photo[$key]->save();
 
                         }else{
 
                             $p = new Photo();
-                            $p->path = file_store($request->photo[$key], 'assets/uploads/sliders/galleries/','photo_');
+                            $p->path = file_store($request->photo[$key], 'assets/uploads/projects/galleries/','photo_');
                             $p->alt = $request->alt[$key];
                             $project->photo()->save($p);
 
@@ -141,9 +141,15 @@ class ProjectController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(Project $project)
     {
-        //
+        try {
+            $project->delete();
+
+            return redirect()->back()->with('flash_message', 'با موفقیت حذف شد');
+        }catch (\Exception $e){
+            return redirect()->back()->with('err_message', 'خطایی رخ داده است، لطفا مجددا تلاش نمایید');
+        }
     }
 
     public function confirm(Project $project)
